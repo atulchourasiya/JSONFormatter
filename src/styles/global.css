@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root { font-synthesis: none; text-rendering: optimizeLegibility; }
+* { box-sizing: border-box; }
+body { margin: 0; background: #f5f7fb; }
+.app-shell { min-height: 100vh; }
+.topbar { border-bottom: 1px solid #e8ebf2; background: rgba(255,255,255,.88) !important; }
+.topbar .MuiToolbar-root { min-height: 70px; padding: 0 32px; }
+.brand-icon { display: grid; place-items: center; width: 38px; height: 38px; color: #635bff; background: #eeedff; border-radius: 12px; }
+.main-container { padding-top: 44px; padding-bottom: 40px; }
+.hero { margin-bottom: 28px; }
+.editor-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.editor-card { padding: 18px; border: 1px solid #e8ebf2; min-width: 0; }
+.side-dot { width: 9px; height: 9px; display: inline-block; border-radius: 50%; }
+.side-dot.left { background: #635bff; }
+.side-dot.right { background: #0f9d82; }
+.json-input { margin-top: 16px !important; }
+.json-input .MuiOutlinedInput-root { align-items: flex-start; padding: 14px; background: #fbfcfe; font-family: "SFMono-Regular", Consolas, monospace; font-size: 13px; line-height: 1.65; }
+.json-input textarea { overflow-wrap: normal; }
+.results-card, .empty-state { border: 1px solid #e8ebf2; overflow: hidden; }
+.empty-state { padding: 38px 20px; text-align: center; }
+.success-mark { display: grid; place-items: center; margin: 0 auto 12px; width: 42px; height: 42px; border-radius: 50%; background: #e7f7ef; color: #16865d; font-size: 24px; font-weight: 800; }
+.diff-path { font-family: "SFMono-Regular", Consolas, monospace !important; font-weight: 650 !important; overflow-wrap: anywhere; }
+.diff-values { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.value-panel { min-width: 0; padding: 10px 12px; border-radius: 10px; border: 1px solid #e8ebf2; background: #fbfcfe; }
+.removed-panel { border-left: 3px solid #d64545; }
+.added-panel { border-left: 3px solid #16865d; }
+.value-panel pre { margin: 5px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; font: 12px/1.6 "SFMono-Regular", Consolas, monospace; color: #344054; }
+.footer-note { text-align: center; color: #98a2b3; font-size: 12px; margin-top: 34px !important; }
+@media (max-width: 850px) {
+  .editor-grid { grid-template-columns: 1fr; }
+  .main-container { padding-top: 30px; }
+}
+@media (max-width: 600px) {
+  .topbar .MuiToolbar-root { padding: 0 16px; }
+  .topbar .MuiChip-root { display: none; }
+  .main-container { padding-left: 16px; padding-right: 16px; }
+  .hero h4 { font-size: 2rem; }
+  .diff-values { grid-template-columns: 1fr; }
+}
