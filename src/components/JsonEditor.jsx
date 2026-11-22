@@ -1,4 +1,3 @@
-
 import React, { useRef, useState } from "react";
 
 import {
@@ -24,6 +23,7 @@ import {
   DeleteOutline,
   Download,
   Compress,
+  ContentCopy,
 } from "@mui/icons-material";
 
 import CodeMirror from "@uiw/react-codemirror";
@@ -31,11 +31,7 @@ import { json } from "@codemirror/lang-json";
 import { oneDark } from "@codemirror/theme-one-dark";
 import { linter } from "@codemirror/lint";
 
-import {
-  detectJsonFormat,
-  convertFormat,
-  minifyJson,
-} from "../utils/json.js";
+import { detectJsonFormat, convertFormat, minifyJson } from "../utils/json.js";
 
 import JSON5 from "json5";
 
@@ -92,14 +88,14 @@ export default function JsonEditor({
 
   const [localError, setLocalError] = useState("");
   const [downloadAnchor, setDownloadAnchor] = useState(null);
+  const [copySuccess, setCopySuccess] = useState(false);
 
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
 
   const currentFormat = detectJsonFormat(value);
 
-  const isValidInput =
-    currentFormat !== "INVALID" && currentFormat !== "empty";
+  const isValidInput = currentFormat !== "INVALID" && currentFormat !== "empty";
 
   const clearErrors = () => {
     setLocalError("");
@@ -124,8 +120,7 @@ export default function JsonEditor({
         throw new Error("Please enter valid JSON or OBJ syntax.");
       }
 
-      const targetFormat =
-        currentFormat === "JSON" ? "OBJ" : "JSON";
+      const targetFormat = currentFormat === "JSON" ? "OBJ" : "JSON";
 
       const converted = convertFormat(value, targetFormat);
 
@@ -217,10 +212,7 @@ export default function JsonEditor({
     if (!value.trim()) return;
 
     const blob = new Blob([value], {
-      type:
-        extension === "json"
-          ? "application/json"
-          : "text/plain",
+      type: extension === "json" ? "application/json" : "text/plain",
     });
 
     const url = URL.createObjectURL(blob);
@@ -242,6 +234,19 @@ export default function JsonEditor({
     setDownloadAnchor(null);
   };
 
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(value);
+
+      setCopySuccess(true);
+
+      setTimeout(() => {
+        setCopySuccess(false);
+      }, 2000);
+    } catch {
+      showError("Unable to copy. Please copy manually.");
+    }
+  };
   const displayedError = localError || error;
 
   return (
@@ -294,9 +299,7 @@ export default function JsonEditor({
                 onClick={handleConvert}
                 disabled={!isValidInput}
               >
-                {currentFormat === "JSON"
-                  ? "JSON → OBJ"
-                  : "OBJ → JSON"}
+                {currentFormat === "JSON" ? "JSON → OBJ" : "OBJ → JSON"}
               </Button>
             </span>
           </Tooltip>
@@ -336,9 +339,7 @@ export default function JsonEditor({
             <span>
               <IconButton
                 size="small"
-                onClick={(event) =>
-                  setDownloadAnchor(event.currentTarget)
-                }
+                onClick={(event) => setDownloadAnchor(event.currentTarget)}
                 disabled={!value.trim()}
                 aria-label="Download file"
               >
@@ -360,6 +361,20 @@ export default function JsonEditor({
               Download as Text (.txt)
             </MenuItem>
           </Menu>
+
+          <Tooltip title="Copy editor content">
+            <span>
+              <IconButton
+                size="small"
+                onClick={handleCopy}
+                disabled={!value.trim()}
+                color={copySuccess ? "success" : "default"}
+                aria-label="Copy editor content"
+              >
+                <ContentCopy />
+              </IconButton>
+            </span>
+          </Tooltip>
 
           {/* Paste */}
           <Tooltip title="Paste from clipboard">
@@ -476,6 +491,12 @@ export default function JsonEditor({
       {displayedError && (
         <Alert severity="error" sx={{ mt: 2 }}>
           {displayedError}
+        </Alert>
+      )}
+
+      {copySuccess && (
+        <Alert severity="success" sx={{ mt: 2 }}>
+          Copied to clipboard!
         </Alert>
       )}
 
